@@ -1,0 +1,15 @@
+{
+  "name": "POS — Personal Operating System",
+  "short_name": "POS",
+  "description": "A local-first personal operating system with Nexus AI.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07090d",
+  "theme_color": "#66d9ff",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

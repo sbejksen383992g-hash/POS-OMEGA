@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
+    <meta name="description" content="POS - Personal Operating System. A local-first execution system with Nexus AI." />
+    <title>POS — Personal Operating System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <link rel="icon" href="/icon.svg" />
+    <meta name="theme-color" content="#07090d" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-icon" href="/icon.svg" />
+</head>
+  <body>
+    <div id="root"></div>
+    <div id="apex-boot-fallback" style="display:none;position:fixed;inset:0;z-index:99999;background:#050505;color:#e8e8ee;font-family:system-ui,sans-serif;padding:24px;overflow:auto">
+      <h1 style="font-size:18px;margin:0 0 8px">APEX could not start</h1>
+      <p style="font-size:13px;opacity:.75;margin:0 0 12px">Your quests, XP and settings are stored on this device and were not touched.</p>
+      <pre id="apex-boot-error" style="font-size:11px;white-space:pre-wrap;opacity:.7;margin:0 0 16px"></pre>
+      <button id="apex-boot-reload" style="padding:12px 16px;border-radius:12px;border:0;background:#b89cff;color:#111;font-weight:700">Reload</button>
+      <button id="apex-boot-clear" style="padding:12px 16px;border-radius:12px;border:1px solid #444;background:transparent;color:#eee;margin-left:8px">Clear app cache &amp; reload</button>
+    </div>
+    <script>
+      (function () {
+        var shown = false;
+        function show(msg) {
+          if (window.__apexBooted || shown) return;
+          shown = true;
+          var box = document.getElementById('apex-boot-fallback');
+          if (!box) return;
+          document.getElementById('apex-boot-error').textContent = String(msg || 'Startup did not complete.');
+          box.style.display = 'block';
+        }
+        window.addEventListener('error', function (e) { if (!window.__apexBooted) show((e && e.message) || 'Script error'); });
+        window.addEventListener('unhandledrejection', function (e) { if (!window.__apexBooted) show(e && e.reason && (e.reason.message || e.reason)); });
+        setTimeout(function () { show('Startup timed out after 10 seconds.'); }, 10000);
+        document.getElementById('apex-boot-reload').onclick = function () { location.reload(); };
+        // Clears ONLY caches/service workers — never localStorage (that is where your data lives).
+        document.getElementById('apex-boot-clear').onclick = function () {
+          var jobs = [];
+          if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) jobs.push(navigator.serviceWorker.getRegistrations().then(function (l) { return Promise.all(l.map(function (r) { return r.unregister(); })); }));
+          if (window.caches && caches.keys) jobs.push(caches.keys().then(function (k) { return Promise.all(k.map(function (n) { return caches.delete(n); })); }));
+          Promise.all(jobs).then(function () { location.reload(); }, function () { location.reload(); });
+        };
+      })();
+    </script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

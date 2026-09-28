@@ -1,0 +1,11 @@
+{
+  "name": "@apex/nexus-native",
+  "version": "3.0.0",
+  "description": "APEX native Android voice, app launcher, intent bridge, wake-word and owner verification",
+  "main": "dist/plugin.cjs.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "files": ["android", "dist"],
+  "peerDependencies": { "@capacitor/core": ">=8.0.0" },
+  "capacitor": { "android": { "src": "android" } }
+}
