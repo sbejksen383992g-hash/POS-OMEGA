@@ -1,14 +1,12 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
 
 export default defineConfig({
   plugins: [react()],
-  server: {
-    port: 5173,
-    host: true,
+  resolve: {
+    alias: {
+      "@apex/nexus-native": path.resolve(__dirname, "src/shims/nexusNative.js"),
+    },
   },
-  build: {
-    outDir: 'dist',
-    chunkSizeWarningLimit: 1200,
-  },
-})
+});
